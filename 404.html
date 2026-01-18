@@ -12,8 +12,10 @@
         // Store route for the app to pick up
         sessionStorage.setItem('redirectPath', path + search + hash);
 
-        // Redirect to index.html
-        window.location.replace(window.location.origin + '/index.html');
+        // Redirect to index.html in the correct project directory
+        const projectPath = window.location.pathname.match(/^\/([^\/]+)/);
+        const basePath = projectPath ? '/' + projectPath[1] : '';
+        window.location.replace(window.location.origin + basePath + '/index.html');
     </script>
 </head>
 <body>

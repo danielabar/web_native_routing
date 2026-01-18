@@ -4,7 +4,7 @@
   "description": "Vanilla JS static web app demonstrating client-side routing without SPA frameworks",
   "type": "module",
   "scripts": {
-    "dev": "live-server --port=3000 --entry-file=index.html --no-browser --watch=views,css,js,app.js,index.html",
+    "dev": "live-server --port=3000 --entry-file=index.html --no-browser --watch=views,css,js,app.js,index.html,404.html",
     "deploy": "gh-pages -d ."
   },
   "keywords": [
