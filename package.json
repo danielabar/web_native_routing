@@ -1,0 +1,22 @@
+{
+  "name": "web_native_routing",
+  "version": "1.0.0",
+  "description": "Vanilla JS static web app demonstrating client-side routing without SPA frameworks",
+  "type": "module",
+  "scripts": {
+    "dev": "live-server --port=3000 --entry-file=index.html --no-browser --watch=views,css,js,app.js,index.html",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [
+    "vanilla-js",
+    "client-side-routing",
+    "static-web-app",
+    "github-pages"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "live-server": "^1.2.2"
+  }
+}

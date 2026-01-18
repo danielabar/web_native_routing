@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        // Capture the intended route and redirect to index.html
+        const path = window.location.pathname;
+        const search = window.location.search;
+        const hash = window.location.hash;
+
+        // Store route for the app to pick up
+        sessionStorage.setItem('redirectPath', path + search + hash);
+
+        // Redirect to index.html
+        window.location.replace(window.location.origin + '/index.html');
+    </script>
+</head>
+<body>
+    <p>Redirecting to the application...</p>
+</body>
+</html>
