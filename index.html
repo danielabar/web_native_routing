@@ -5,7 +5,24 @@
     <title>Native Routing SPA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Vanilla JS static web app demonstrating client-side routing without SPA frameworks" />
-    <link rel="stylesheet" href="./css/main.css" />
+    <script>
+      // Detect application base path - works on any host
+      // For GitHub Pages projects: detect if we're in a project subdirectory
+      // For other hosts: assume root deployment unless detected otherwise
+      const currentPath = window.location.pathname;
+      let basePath = '/';
+
+      // Check if this looks like a GitHub Pages project (path starts with repo name)
+      if (window.location.hostname.includes('github.io') && currentPath !== '/') {
+        const pathParts = currentPath.split('/').filter(Boolean);
+        if (pathParts.length > 0) {
+          basePath = '/' + pathParts[0] + '/';
+        }
+      }
+
+      document.write('<base href="' + window.location.origin + basePath + '">');
+    </script>
+    <link rel="stylesheet" href="css/main.css" />
   </head>
 
   <body>
@@ -21,6 +38,6 @@
     </main>
 
     <!-- App entry point -->
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>
