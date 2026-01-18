@@ -2,6 +2,20 @@ class Router {
   constructor() {
     this.routes = new Map();
     this.currentRoute = null;
+
+    // Get the base path for GitHub Pages projects
+    this.basePath = this.getBasePath();
+  }
+
+  // Detect base path from current URL
+  getBasePath() {
+    const path = window.location.pathname;
+    // For GitHub Pages projects, extract the project name
+    const match = path.match(/^\/([^/]+)\//);
+    if (match && window.location.hostname.includes('github.io')) {
+      return '/' + match[1];
+    }
+    return ''; // Local development or root deployment
   }
 
   // Register a route with its handler function
@@ -17,11 +31,14 @@ class Router {
     document.body.classList.add('navigating');
 
     try {
+      // Build full path with base path
+      const fullPath = this.basePath + path;
+
       // Update browser history
       if (replace) {
-        history.replaceState({}, '', path);
+        history.replaceState({}, '', fullPath);
       } else {
-        history.pushState({}, '', path);
+        history.pushState({}, '', fullPath);
       }
 
       await this.render(path);
@@ -32,7 +49,12 @@ class Router {
   }
 
   // Render the current route
-  async render(path = window.location.pathname) {
+  async render(path) {
+    // If no path provided, extract from current URL
+    if (!path) {
+      path = this.getCurrentPath();
+    }
+
     const route = this.routes.get(path) || this.routes.get('/404') || this.routes.get('/');
 
     if (!route) {
@@ -48,6 +70,13 @@ class Router {
       console.error('Route rendering failed:', error);
       this.handleRenderError(error, path);
     }
+  }
+
+  // Extract route path from current URL
+  getCurrentPath() {
+    const fullPath = window.location.pathname;
+    // Remove base path to get the route
+    return fullPath.replace(this.basePath, '') || '/';
   }
 
   // Handle rendering errors
@@ -93,7 +122,10 @@ class Router {
       if (url.origin !== window.location.origin) return;
 
       e.preventDefault();
-      await this.navigate(url.pathname);
+
+      // Extract the route path (remove base path)
+      const routePath = url.pathname.replace(this.basePath, '') || '/';
+      await this.navigate(routePath);
     });
 
     // Handle redirected routes from 404.html
