@@ -18,7 +18,7 @@ class Router {
     /**
      * Navigate to a specific route
      */
-    async navigate(path) {
+    async navigate(path, { pushState = true } = {}) {
         // Don't navigate if we're already on this route
         if (this.currentRoute === path) return;
 
@@ -50,8 +50,8 @@ class Router {
             // Try to load and initialize view script
             await this.loadViewScript(viewDir);
 
-            // Update browser history (don't use pushState on initial load)
-            if (this.currentRoute !== null) {
+            // Update browser history (only for user-initiated navigation)
+            if (pushState && this.currentRoute !== null) {
                 history.pushState({ route: path }, '', path);
             }
 
@@ -159,7 +159,7 @@ class Router {
         // Handle browser back/forward buttons
         window.addEventListener('popstate', (event) => {
             const path = event.state?.route || location.pathname;
-            this.navigate(path);
+            this.navigate(path, { pushState: false }); // Don't push state for browser navigation
         });
 
         // Intercept navigation link clicks
@@ -167,7 +167,7 @@ class Router {
             const link = event.target.closest('[data-route]');
             if (link) {
                 event.preventDefault();
-                this.navigate(link.getAttribute('href'));
+                this.navigate(link.getAttribute('href')); // Uses default pushState: true
             }
         });
 
@@ -180,7 +180,7 @@ class Router {
      */
     async handleInitialRoute() {
         const path = location.pathname;
-        await this.navigate(path);
+        await this.navigate(path, { pushState: false }); // Initial load shouldn't push state
     }
 
     /**
