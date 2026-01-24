@@ -102,7 +102,7 @@ class Router {
                 return this.initializeView(ViewClass, viewDir);
             }
 
-            // Try to dynamically import the view script
+            // Dynamically import the view script (every view should have one)
             const viewModule = await import(`../views/${viewDir}/script.js`);
             const ViewClass = viewModule.default;
 
@@ -123,26 +123,16 @@ class Router {
     }
 
     /**
-     * Handle errors when loading view scripts with graceful fallbacks
+     * Handle errors when loading view scripts
      */
     handleViewScriptError(error, viewDir) {
-        // Module not found - this is fine, script is optional
-        if (error.message.includes('Failed to resolve module') ||
-            error.message.includes('404') ||
-            error.code === 'MODULE_NOT_FOUND') {
-            console.debug(`No script found for view: ${viewDir} (this is fine)`);
-            return;
-        }
-
-        // Syntax errors in development should be shown
-        if (error instanceof SyntaxError) {
-            console.error(`Syntax error in ${viewDir}/script.js:`, error);
-            // Continue without the script - template still works
-            return;
-        }
-
-        // All other errors: log and continue
         console.error(`Error loading ${viewDir} script:`, error);
+
+        // Show user-friendly error in development
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+            console.warn(`Expected script file: views/${viewDir}/script.js`);
+        }
+
         // Template still works, just no interactivity
     }
 
