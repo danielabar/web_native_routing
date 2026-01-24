@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create router instance
     const router = new Router();
 
-    // Define routes
-    router.addRoute('/', 'views/home.html');
-    router.addRoute('/about', 'views/about.html');
-    router.addRoute('/contact', 'views/contact.html');
+    // Define routes - now pointing to view directories
+    router.addRoute('/', 'home');
+    router.addRoute('/about', 'about');
+    router.addRoute('/contact', 'contact');
 
     // Initialize router
     router.init();
@@ -14,5 +14,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make router globally available for debugging
     window.app = { router };
 
-    console.log('Web Native Router initialized');
+    console.log('Web Native Router initialized with view-based architecture');
 });

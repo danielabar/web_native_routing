@@ -2,26 +2,28 @@ class Router {
     constructor() {
         this.routes = new Map();
         this.currentRoute = null;
+        this.currentView = null; // Track current view instance
         this.contentElement = document.getElementById('content');
-        this.cache = new Map(); // Simple template cache
+        this.cache = new Map(); // Template cache
+        this.viewCache = new Map(); // View script cache
     }
 
     /**
-     * Register a route with its corresponding template path
+     * Register a route with its view directory
      */
-    addRoute(path, templatePath) {
-        this.routes.set(path, templatePath);
+    addRoute(path, viewDir) {
+        this.routes.set(path, viewDir);
     }
 
     /**
      * Navigate to a specific route
      */
-    async navigate(path) {
+    async navigate(path, { pushState = true } = {}) {
         // Don't navigate if we're already on this route
         if (this.currentRoute === path) return;
 
-        const templatePath = this.routes.get(path);
-        if (!templatePath) {
+        const viewDir = this.routes.get(path);
+        if (!viewDir) {
             console.warn(`No route found for ${path}`);
             this.show404();
             return;
@@ -31,11 +33,25 @@ class Router {
             // Show loading state
             this.showLoading();
 
-            // Load and display the template
-            await this.loadView(templatePath);
+            // Destroy current view if exists
+            if (this.currentView && typeof this.currentView.destroy === 'function') {
+                try {
+                    this.currentView.destroy();
+                } catch (error) {
+                    console.error(`Error in view destroy():`, error);
+                    // Continue navigation anyway
+                }
+                this.currentView = null;
+            }
 
-            // Update browser history (don't use pushState on initial load)
-            if (this.currentRoute !== null) {
+            // Load template
+            await this.loadView(`views/${viewDir}/template.html`);
+
+            // Try to load and initialize view script
+            await this.loadViewScript(viewDir);
+
+            // Update browser history (only for user-initiated navigation)
+            if (pushState && this.currentRoute !== null) {
                 history.pushState({ route: path }, '', path);
             }
 
@@ -73,9 +89,67 @@ class Router {
 
         // Inject into DOM
         this.contentElement.innerHTML = html;
+    }
 
-        // Initialize any JavaScript for the loaded view
-        this.initializeView();
+    /**
+     * Load view-specific JavaScript module
+     */
+    async loadViewScript(viewDir) {
+        try {
+            // Check if we already have this view cached
+            if (this.viewCache.has(viewDir)) {
+                const ViewClass = this.viewCache.get(viewDir);
+                return this.initializeView(ViewClass, viewDir);
+            }
+
+            // Dynamically import the view script (every view should have one)
+            const viewModule = await import(`../views/${viewDir}/script.js`);
+            const ViewClass = viewModule.default;
+
+            if (!ViewClass) {
+                console.warn(`View ${viewDir}/script.js has no default export`);
+                return;
+            }
+
+            // Cache the view class
+            this.viewCache.set(viewDir, ViewClass);
+
+            // Initialize the view safely
+            this.initializeView(ViewClass, viewDir);
+
+        } catch (error) {
+            this.handleViewScriptError(error, viewDir);
+        }
+    }
+
+    /**
+     * Handle errors when loading view scripts
+     */
+    handleViewScriptError(error, viewDir) {
+        console.error(`Error loading ${viewDir} script:`, error);
+
+        // Show user-friendly error in development
+        if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+            console.warn(`Expected script file: views/${viewDir}/script.js`);
+        }
+
+        // Template still works, just no interactivity
+    }
+
+    /**
+     * Safely initialize view with error handling
+     */
+    initializeView(ViewClass, viewDir) {
+        try {
+            this.currentView = new ViewClass();
+
+            if (typeof this.currentView.init === 'function') {
+                this.currentView.init();
+            }
+        } catch (error) {
+            console.error(`Error initializing ${viewDir} view:`, error);
+            this.currentView = null; // Clean up
+        }
     }
 
     /**
@@ -85,7 +159,7 @@ class Router {
         // Handle browser back/forward buttons
         window.addEventListener('popstate', (event) => {
             const path = event.state?.route || location.pathname;
-            this.navigate(path);
+            this.navigate(path, { pushState: false }); // Don't push state for browser navigation
         });
 
         // Intercept navigation link clicks
@@ -93,7 +167,7 @@ class Router {
             const link = event.target.closest('[data-route]');
             if (link) {
                 event.preventDefault();
-                this.navigate(link.getAttribute('href'));
+                this.navigate(link.getAttribute('href')); // Uses default pushState: true
             }
         });
 
@@ -106,7 +180,7 @@ class Router {
      */
     async handleInitialRoute() {
         const path = location.pathname;
-        await this.navigate(path);
+        await this.navigate(path, { pushState: false }); // Initial load shouldn't push state
     }
 
     /**
@@ -153,41 +227,7 @@ class Router {
         `;
     }
 
-    /**
-     * Initialize any JavaScript needed for the current view
-     */
-    initializeView() {
-        // Add any view-specific initialization here
-        // For example, form handlers, interactive elements, etc.
-
-        // Handle contact form if on contact page
-        const contactForm = document.getElementById('contact-form');
-        if (contactForm) {
-            this.initContactForm(contactForm);
-        }
-    }
-
-    /**
-     * Initialize contact form (example of view-specific functionality)
-     */
-    initContactForm(form) {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-
-            // Simulate form submission
-            const submitButton = form.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            submitButton.textContent = 'Sending...';
-            submitButton.disabled = true;
-
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            // Show success message
-            form.innerHTML = '<p class="success">Thank you! Your message has been sent.</p>';
-        });
-    }
+// ... rest of router methods remain similar
 }
 
 // Make Router available globally
