@@ -1,6 +1,6 @@
 # Web Native Routing
 
-A lightweight single-page application router built with native web APIs only. No frameworks, no build tools, no dependencies - just vanilla JavaScript demonstrating modern browser capabilities for simple routing needs.
+A lightweight single-page application router built with native web APIs only. No frameworks, no build tools, no dependencies - just vanilla JavaScript demonstrating modern browser capabilities for simple routing needs. Inspired by: [Anti-frameworkism: Choosing native web APIs over frameworks](https://blog.logrocket.com/anti-frameworkism-native-web-apis)
 
 ## Why This Project?
 
