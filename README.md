@@ -14,11 +14,11 @@ Perfect for:
 
 ## Features
 
-- ✅ Client-side routing with History API
-- ✅ HTML template loading with Fetch API
-- ✅ Zero dependencies
-- ✅ No build step required
-- ✅ Browser back/forward support
+- Client-side routing with History API
+- HTML template loading with Fetch API
+- Zero dependencies
+- No build step required
+- Browser back/forward support
 
 ## Quick Start
 
