@@ -1,6 +1,6 @@
 # Web Native Routing
 
-A lightweight single-page application router built with native web APIs only. No frameworks, no build tools, no dependencies - just vanilla JavaScript demonstrating modern browser capabilities for simple routing needs. Inspired by: [Anti-frameworkism: Choosing native web APIs over frameworks](https://blog.logrocket.com/anti-frameworkism-native-web-apis)
+A simple demo application showing how to achieve SPA-like routing with a single index.html file using native web APIs only. No frameworks, no build tools, no dependencies - vanilla JavaScript demonstrating how modern browsers can handle client-side routing without heavyweight SPA frameworks. Inspired by: [Anti-frameworkism: Choosing native web APIs over frameworks](https://blog.logrocket.com/anti-frameworkism-native-web-apis).
 
 ## Why This Project?
 
@@ -11,44 +11,30 @@ Perfect for:
 - Portfolio websites
 - GitHub Pages deployment
 - Learning web fundamentals
-- Projects where bundle size matters
 
 ## Features
 
-- ✅ Client-side routing with History API
-- ✅ HTML template loading with Fetch API
-- ✅ Zero dependencies (~2-3KB total)
-- ✅ No build step required
-- ✅ Progressive enhancement
-- ✅ Browser back/forward support
+- Client-side routing with History API
+- HTML template loading with Fetch API
+- Zero dependencies
+- No build step required
+- Browser back/forward support
 
 ## Quick Start
 
 ### Development Setup
 
 ```bash
-# Install development tools (optional)
+# Install development tool
 npm install
 
 # Start development server with live reload
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`
+The application will be available at `http://localhost:3000`.
 
-### Manual Setup
-
-Since this uses native web APIs, you can also run it with any static file server:
-
-```bash
-# Python
-python -m http.server 8000
-
-# Node.js
-npx http-server
-
-# Or any other static server
-```
+Click on the navigation links with browser developer tools open to see how we remain on the same index.html while the view content gets swapped out in the main section.
 
 ## Project Structure
 
@@ -59,9 +45,15 @@ npx http-server
 │   ├── router.js       # Core routing logic
 │   └── app.js          # Application initialization
 └── views/
-    ├── home.html       # Home page template
-    ├── about.html      # About page template
-    └── contact.html    # Contact page template
+    ├── home/
+    │   ├── script.js   # Home page JavaScript
+    │   └── template.html # Home page template
+    ├── about/
+    │   ├── script.js   # About page JavaScript
+    │   └── template.html # About page template
+    └── contact/
+        ├── script.js   # Contact page JavaScript
+        └── template.html # Contact page template
 ```
 
 ## Browser Support
@@ -74,7 +66,13 @@ Works in all modern browsers that support:
 
 ## Documentation
 
-Detailed documentation and architecture decisions will be available in the `docs/` directory.
+Detailed documentation is available in the `docs/` directory:
+
+- [Architecture Overview](docs/architecture.md) - How the system works
+- [Router Implementation](docs/router-implementation.md) - Deep dive into the Router class (includes limitations)
+- [View System](docs/view-system.md) - Creating and managing views
+- [View Scripts & Interactivity](docs/view-system.md#writing-view-scripts--interactivity) - Adding behavior to views
+- [References](docs/references.md) - Further reading and learning resources
 
 ## License
 
