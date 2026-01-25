@@ -1,43 +1,35 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Native Routing SPA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Vanilla JS static web app demonstrating client-side routing without SPA frameworks" />
-    <script>
-      // Detect application base path - works on any host
-      // For GitHub Pages projects: detect if we're in a project subdirectory
-      // For other hosts: assume root deployment unless detected otherwise
-      const currentPath = window.location.pathname;
-      let basePath = '/';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Native Routing Demo</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>Web Native Router</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-route>Home</a></li>
+                <li><a href="/about" class="nav-link" data-route>About</a></li>
+                <li><a href="/contact" class="nav-link" data-route>Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-      // Check if this looks like a GitHub Pages project (path starts with repo name)
-      if (window.location.hostname.includes('github.io') && currentPath !== '/') {
-        const pathParts = currentPath.split('/').filter(Boolean);
-        if (pathParts.length > 0) {
-          basePath = '/' + pathParts[0] + '/';
-        }
-      }
-
-      document.write('<base href="' + window.location.origin + basePath + '">');
-    </script>
-    <link rel="stylesheet" href="css/main.css" />
-  </head>
-
-  <body>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/contact">Contact</a>
-    </nav>
-
-    <!-- App root -->
-    <main id="app">
-      <!-- Views get injected here -->
+    <main id="content" class="main-content">
+        <!-- Dynamic content will be loaded here -->
+        <div class="loading">Loading...</div>
     </main>
 
-    <!-- App entry point -->
-    <script type="module" src="app.js"></script>
-  </body>
+    <footer class="site-footer">
+        <p>&copy; 2026 Web Native Routing Demo</p>
+    </footer>
+
+    <script src="./js/router.js"></script>
+    <script src="./js/app.js"></script>
+</body>
 </html>
