@@ -6,10 +6,21 @@
     <title>Web Native Router</title>
     <script>
         // GitHub Pages SPA fallback
-        // Redirect any 404 back to index.html with the path preserved in sessionStorage
+        // Store the current URL and redirect to the project base
         sessionStorage.redirect = location.href;
+
+        // Detect base path from current URL
+        var pathSegments = location.pathname.split('/');
+        var basePath = '/';
+
+        // For GitHub Pages: https://user.github.io/project/route -> base is /project/
+        if (pathSegments.length >= 2 && pathSegments[1]) {
+            basePath = '/' + pathSegments[1] + '/';
+        }
+
+        // Redirect to the base path
+        location.replace(basePath);
     </script>
-    <meta http-equiv="refresh" content="0;URL='/'">
 </head>
 <body>
     <p>Redirecting...</p>
