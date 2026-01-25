@@ -1,11 +1,74 @@
 class Router {
-    constructor() {
+    constructor(options = {}) {
         this.routes = new Map();
         this.currentRoute = null;
         this.currentView = null; // Track current view instance
         this.contentElement = document.getElementById('content');
         this.cache = new Map(); // Template cache
         this.viewCache = new Map(); // View script cache
+        this.basePath = options.basePath || this.detectBasePath();
+        console.log('Router base path detected:', this.basePath);
+    }
+
+    /**
+     * Automatically detect the base path by examining the current script's location
+     * @returns {string} The detected base path (e.g., "/", "/project-name/")
+     */
+    detectBasePath() {
+        try {
+            // Look for script tags containing app.js or router.js
+            const scripts = Array.from(document.querySelectorAll('script[src]'));
+            const appScript = scripts.find(script => {
+                const src = script.getAttribute('src');
+                return src && (src.includes('/app.js') || src.includes('/js/app.js'));
+            });
+
+            if (appScript) {
+                const src = appScript.getAttribute('src');
+                const url = new URL(src, window.location.href);
+                let basePath = url.pathname.replace(/\/js\/app\.js$/, '') || '/';
+
+                // Ensure base path starts and ends correctly
+                if (!basePath.startsWith('/')) basePath = '/' + basePath;
+                if (basePath !== '/' && !basePath.endsWith('/')) basePath += '/';
+
+                return basePath;
+            }
+        } catch (error) {
+            console.warn('Base path detection failed:', error);
+        }
+
+        // Fallback to root
+        return '/';
+    }
+
+    /**
+     * Remove base path from incoming path for route matching
+     * @param {string} fullPath - Full path from browser (includes base path)
+     * @returns {string} Normalized path for route matching
+     */
+    normalizePath(fullPath) {
+        if (this.basePath === '/') return fullPath;
+
+        if (fullPath.startsWith(this.basePath)) {
+            const normalized = fullPath.slice(this.basePath.length) || '/';
+            return normalized.startsWith('/') ? normalized : '/' + normalized;
+        }
+
+        return fullPath;
+    }
+
+    /**
+     * Add base path to route path for browser URLs and history
+     * @param {string} routePath - Clean route path (/, /about, etc.)
+     * @returns {string} Full path including base path
+     */
+    buildFullPath(routePath) {
+        if (this.basePath === '/') return routePath;
+
+        if (routePath === '/') return this.basePath.slice(0, -1) || '/';
+
+        return this.basePath + routePath.slice(1);
     }
 
     /**
@@ -52,7 +115,8 @@ class Router {
 
             // Update browser history (only for user-initiated navigation)
             if (pushState && this.currentRoute !== null) {
-                history.pushState({ route: path }, '', path);
+                const fullPath = this.buildFullPath(path);
+                history.pushState({ route: path }, '', fullPath);
             }
 
             // Update current route
@@ -158,7 +222,9 @@ class Router {
     init() {
         // Handle browser back/forward buttons
         window.addEventListener('popstate', (event) => {
-            const path = event.state?.route || location.pathname;
+            // If we have stored route in state, use it directly (already normalized)
+            // Otherwise normalize the current pathname
+            const path = event.state?.route || this.normalizePath(location.pathname);
             this.navigate(path, { pushState: false }); // Don't push state for browser navigation
         });
 
@@ -179,8 +245,9 @@ class Router {
      * Handle the initial page load route
      */
     async handleInitialRoute() {
-        const path = location.pathname;
-        await this.navigate(path, { pushState: false }); // Initial load shouldn't push state
+        const fullPath = location.pathname;
+        const normalizedPath = this.normalizePath(fullPath);
+        await this.navigate(normalizedPath, { pushState: false }); // Initial load shouldn't push state
     }
 
     /**
@@ -225,6 +292,22 @@ class Router {
                 <button class="btn btn-secondary" onclick="location.reload()">Reload Page</button>
             </div>
         `;
+    }
+
+    /**
+     * Debug method for troubleshooting
+     * @returns {object} Router debug information
+     */
+    debug() {
+        return {
+            basePath: this.basePath,
+            currentRoute: this.currentRoute,
+            locationPathname: location.pathname,
+            normalizedPath: this.normalizePath(location.pathname),
+            routes: Array.from(this.routes.entries()),
+            cache: Array.from(this.cache.keys()),
+            viewCache: Array.from(this.viewCache.keys())
+        };
     }
 
 // ... rest of router methods remain similar
