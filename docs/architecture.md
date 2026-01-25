@@ -149,10 +149,9 @@ The architecture is optimized for:
 
 Now that you understand the overall architecture, dive deeper into:
 
-- **[Router Implementation](router-implementation.md)**: How the Router class works internally
+- **[Router Implementation](router-implementation.md)**: How the Router class works internally (includes limitations)
 - **[View System](view-system.md)**: Creating and managing views
 - **[Interactivity](interactivity.md)**: Adding behavior to your views
-- **[Limitations](limitations.md)**: What this system doesn't cover
 - **[References](references.md)**: Further reading and learning resources
 
 ## Summary
