@@ -6,9 +6,9 @@ This document explains how views work in the web native routing system. Views ar
 
 A **view** in this system consists of two parts:
 1. **Template** (`template.html`) - The HTML content and structure
-2. **Script** (`script.js`) - Optional JavaScript for interactivity
+2. **Script** (`script.js`) - Optional JavaScript for interactivity and behavior
 
-Think of views as self-contained mini-applications that get loaded on demand.
+Think of views as self-contained mini-applications that get loaded on demand, with each view managing its own interactive behavior.
 
 ## View Directory Structure
 
@@ -97,9 +97,9 @@ Templates are standard HTML files that get injected into the `#content` element.
 - Reference external scripts or stylesheets
 - Use global JavaScript variables
 
-## Writing View Scripts
+## Writing View Scripts & Interactivity
 
-View scripts are ES6 modules that export a class defining the view's behavior.
+View scripts are ES6 modules that export a class defining the view's interactive behavior and event handling.
 
 ### Basic View Class Structure
 
