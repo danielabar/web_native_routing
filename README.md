@@ -1,6 +1,6 @@
 # Web Native Routing
 
-A simple demo application showing how to achieve SPA-like routing with just a single index.html file using native web APIs only. No frameworks, no build tools, no dependencies - just vanilla JavaScript demonstrating how modern browsers can handle client-side routing without heavyweight SPA frameworks. Inspired by: [Anti-frameworkism: Choosing native web APIs over frameworks](https://blog.logrocket.com/anti-frameworkism-native-web-apis)
+A simple demo application showing how to achieve SPA-like routing with a single index.html file using native web APIs only. No frameworks, no build tools, no dependencies - vanilla JavaScript demonstrating how modern browsers can handle client-side routing without heavyweight SPA frameworks. Inspired by: [Anti-frameworkism: Choosing native web APIs over frameworks](https://blog.logrocket.com/anti-frameworkism-native-web-apis).
 
 ## Why This Project?
 
