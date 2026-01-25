@@ -217,7 +217,7 @@ async loadViewScript(viewDir) {
 - **Graceful degradation**: Works even if script fails to load
 - **Default export pattern**: Views must export a class as default
 
-> See **[Interactivity](interactivity.md)** for detailed examples of view-specific JavaScript patterns.
+> See **[View Scripts & Interactivity](view-system.md#writing-view-scripts--interactivity)** for detailed examples of view-specific JavaScript patterns.
 
 ## Caching Strategy
 

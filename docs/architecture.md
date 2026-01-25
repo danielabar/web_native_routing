@@ -151,7 +151,7 @@ Now that you understand the overall architecture, dive deeper into:
 
 - **[Router Implementation](router-implementation.md)**: How the Router class works internally (includes limitations)
 - **[View System](view-system.md)**: Creating and managing views
-- **[Interactivity](interactivity.md)**: Adding behavior to your views
+- **[View Scripts & Interactivity](view-system.md#writing-view-scripts--interactivity)**: Adding behavior to your views
 - **[References](references.md)**: Further reading and learning resources
 
 ## Summary

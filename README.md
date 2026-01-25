@@ -71,7 +71,7 @@ Detailed documentation is available in the `docs/` directory:
 - [Architecture Overview](docs/architecture.md) - How the system works
 - [Router Implementation](docs/router-implementation.md) - Deep dive into the Router class (includes limitations)
 - [View System](docs/view-system.md) - Creating and managing views
-- [Interactivity](docs/interactivity.md) - Adding behavior to views
+- [View Scripts & Interactivity](docs/view-system.md#writing-view-scripts--interactivity) - Adding behavior to views
 - [References](docs/references.md) - Further reading and learning resources
 
 ## License
