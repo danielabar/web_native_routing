@@ -4,22 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Native Router</title>
-    <script>
-        // GitHub Pages SPA fallback
-        // Store the current URL and redirect to the project base
+    <script type="module">
+        // SPA fallback - redirect to configured base path
+        import { deploymentConfig } from './js/config.js';
+
+        // Store the intended URL
         sessionStorage.redirect = location.href;
 
-        // Detect base path from current URL
-        var pathSegments = location.pathname.split('/');
-        var basePath = '/';
-
-        // For GitHub Pages: https://user.github.io/project/route -> base is /project/
-        if (pathSegments.length >= 2 && pathSegments[1]) {
-            basePath = '/' + pathSegments[1] + '/';
-        }
-
-        // Redirect to the base path
-        location.replace(basePath);
+        // Redirect to app base path (no detection needed)
+        location.replace(deploymentConfig.basePath);
     </script>
 </head>
 <body>

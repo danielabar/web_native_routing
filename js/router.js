@@ -6,40 +6,10 @@ class Router {
         this.contentElement = document.getElementById('content');
         this.cache = new Map(); // Template cache
         this.viewCache = new Map(); // View script cache
-        this.basePath = options.basePath || this.detectBasePath();
-        console.log('Router base path detected:', this.basePath);
-    }
 
-    /**
-     * Automatically detect the base path by examining the current script's location
-     * @returns {string} The detected base path (e.g., "/", "/project-name/")
-     */
-    detectBasePath() {
-        try {
-            // Look for script tags containing app.js or router.js
-            const scripts = Array.from(document.querySelectorAll('script[src]'));
-            const appScript = scripts.find(script => {
-                const src = script.getAttribute('src');
-                return src && (src.includes('/app.js') || src.includes('/js/app.js'));
-            });
-
-            if (appScript) {
-                const src = appScript.getAttribute('src');
-                const url = new URL(src, window.location.href);
-                let basePath = url.pathname.replace(/\/js\/app\.js$/, '') || '/';
-
-                // Ensure base path starts and ends correctly
-                if (!basePath.startsWith('/')) basePath = '/' + basePath;
-                if (basePath !== '/' && !basePath.endsWith('/')) basePath += '/';
-
-                return basePath;
-            }
-        } catch (error) {
-            console.warn('Base path detection failed:', error);
-        }
-
-        // Fallback to root
-        return '/';
+        // Use explicit configuration instead of auto-detection
+        this.basePath = options.basePath || '/';
+        console.log('Router configured with base path:', this.basePath);
     }
 
     /**
@@ -295,8 +265,7 @@ class Router {
     }
 
     /**
-     * Debug method for troubleshooting
-     * @returns {object} Router debug information
+     * Debug method for troubleshooting deployments
      */
     debug() {
         return {
@@ -304,6 +273,7 @@ class Router {
             currentRoute: this.currentRoute,
             locationPathname: location.pathname,
             normalizedPath: this.normalizePath(location.pathname),
+            fullPathExample: this.buildFullPath('/about'),
             routes: Array.from(this.routes.entries()),
             cache: Array.from(this.cache.keys()),
             viewCache: Array.from(this.viewCache.keys())

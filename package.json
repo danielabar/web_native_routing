@@ -4,7 +4,7 @@
   "description": "Vanilla JS static web app demonstrating client-side routing without SPA frameworks",
   "type": "module",
   "scripts": {
-    "dev": "live-server --port=3000 --entry-file=index.html --no-browser --watch=views,css,js,app.js,index.html,404.html",
+    "dev": "serve",
     "deploy": "gh-pages -d .",
     "test:e2e": "npx playwright-bdd && playwright test",
     "test:e2e:headed": "npx playwright-bdd && playwright test --headed",
@@ -26,6 +26,7 @@
     "gh-pages": "^6.3.0",
     "live-server": "^1.2.2",
     "playwright": "^1.57.0",
-    "playwright-bdd": "^8.4.2"
+    "playwright-bdd": "^8.4.2",
+    "serve": "^14.2.5"
   }
 }
