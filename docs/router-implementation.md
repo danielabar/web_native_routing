@@ -8,13 +8,17 @@ The `Router` class is the heart of the routing system. Here's its structure:
 
 ```javascript
 class Router {
-    constructor() {
+    constructor(options = {}) {
         this.routes = new Map();           // Route registry
         this.currentRoute = null;          // Current active route
         this.currentView = null;           // Current view instance
         this.contentElement = document.getElementById('content');
         this.cache = new Map();            // Template cache
         this.viewCache = new Map();        // View script cache
+
+        // Use explicit configuration instead of auto-detection
+        this.basePath = options.basePath || '/';
+        console.log('Router configured with base path:', this.basePath);
     }
 }
 ```
@@ -51,6 +55,36 @@ sequenceDiagram
 
 ## Core Methods Breakdown
 
+### 0. Base Path Utilities
+
+The router includes utilities to handle different deployment base paths:
+
+#### `normalizePath(fullPath)`
+Removes base path from browser URLs for route matching:
+
+```javascript
+// With basePath: '/web_native_routing/'
+router.normalizePath('/web_native_routing/about') // returns '/about'
+router.normalizePath('/web_native_routing/')      // returns '/'
+
+// With basePath: '/'
+router.normalizePath('/about')                    // returns '/about'
+```
+
+#### `buildFullPath(routePath)`
+Adds base path to route paths for browser URLs:
+
+```javascript
+// With basePath: '/web_native_routing/'
+router.buildFullPath('/about')                    // returns '/web_native_routing/about'
+router.buildFullPath('/')                         // returns '/web_native_routing'
+
+// With basePath: '/'
+router.buildFullPath('/about')                    // returns '/about'
+```
+
+These utilities allow the router to work seamlessly across different hosting environments.
+
 ### 1. Route Registration (`addRoute`)
 
 ```javascript
@@ -64,19 +98,26 @@ addRoute(path, viewDir) {
 
 **Sample usage from application code**:
 ```javascript
-// js/app.js - Setting up routes during app initialization
-document.addEventListener('DOMContentLoaded', () => {
-    const router = new Router();
+// js/app.js - Modern ES6 module approach with configuration
+import { deploymentConfig } from './config.js';
+import { routes } from './routes.js';
 
-    // Register all your routes
-    router.addRoute('/', 'home');           // / → views/home/
-    router.addRoute('/about', 'about');     // /about → views/about/
-    router.addRoute('/contact', 'contact'); // /contact → views/contact/
-    router.addRoute('/products', 'products'); // /products → views/products/
-    router.addRoute('/blog', 'blog');       // /blog → views/blog/
+document.addEventListener('DOMContentLoaded', () => {
+    // Create router with explicit configuration
+    const router = new Router({
+        basePath: deploymentConfig.basePath
+    });
+
+    // Register routes from centralized config
+    routes.forEach(route => {
+        const viewDir = route === '/' ? 'home' : route.slice(1);
+        router.addRoute(route, viewDir);
+    });
 
     // Initialize the router
     router.init();
+
+    console.log('Router initialized with base path:', deploymentConfig.basePath);
 });
 ```
 
@@ -126,7 +167,8 @@ async navigate(path, { pushState = true } = {}) {
 
         // 7. Update browser history (if needed)
         if (pushState && this.currentRoute !== null) {
-            history.pushState({ route: path }, '', path);
+            const fullPath = this.buildFullPath(path);
+            history.pushState({ route: path }, '', fullPath);
         }
 
         // 8. Update state and UI
@@ -142,6 +184,7 @@ async navigate(path, { pushState = true } = {}) {
 
 **Key insights**:
 - **`pushState` parameter**: Differentiates user clicks from browser navigation
+- **Base path handling**: Uses `buildFullPath()` to create proper browser URLs with base path
 - **Error handling**: Graceful fallbacks if anything goes wrong
 - **View cleanup**: Prevents memory leaks by calling `destroy()`
 - **Loading states**: User feedback during async operations
