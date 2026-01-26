@@ -9,6 +9,7 @@ This project demonstrates **client-side routing using only native web APIs** - n
 Key principles:
 - **Web standards first**: Use native APIs (History API, Fetch API, ES6 modules)
 - **JavaScript required**: This is a client-side SPA that needs JavaScript enabled to function
+- **Explicit configuration**: Use clear configuration over auto-detection for deployment flexibility
 
 ## What is Client-Side Routing?
 
@@ -53,11 +54,16 @@ The project uses a **view-based directory structure** where each route correspon
 ```
 web_native_routing/
 ├── index.html              # Main app shell
+├── 404.html                # SPA fallback for direct URLs
 ├── js/
 │   ├── router.js          # Core routing logic
-│   └── app.js             # App initialization
+│   ├── app.js             # App initialization
+│   ├── config.js          # Deployment configuration
+│   └── routes.js          # Route definitions
 ├── css/
 │   └── styles.css         # Application styles
+├── scripts/
+│   └── build.sh           # Build system for deployment
 └── views/                 # One folder per route
     ├── home/
     │   ├── template.html  # HTML content for route
@@ -144,6 +150,50 @@ The architecture is optimized for:
 - **Quick navigation**: Cached templates and scripts reduce latency
 - **Memory efficiency**: Proper cleanup prevents memory leaks
 - **Network efficiency**: Only loads code needed for current view
+
+## Deployment Configuration
+
+The system uses **explicit base path configuration** to handle different hosting scenarios:
+
+### Base Path Challenge
+
+Different hosting platforms serve static sites from different base paths:
+- **Local development**: Usually serves from root `/`
+- **GitHub Pages**: Serves from project subdirectory `/repository-name/`
+- **Other hosts**: May serve from custom paths
+
+### Solution: Explicit Configuration
+
+Instead of auto-detection (which is complex and error-prone), the system uses explicit configuration:
+
+```javascript
+// js/config.js - Single source of truth
+export const deploymentConfig = {
+    basePath: '/',                      // Local development
+    // basePath: '/web_native_routing/', // GitHub Pages
+};
+```
+
+### Build System
+
+The build system (`scripts/build.sh`) automates deployment:
+
+1. **Copies source files** to `dist/` directory
+2. **Modifies config.js** to use deployment base path
+3. **Preserves development setup** - source files remain unchanged
+
+### SPA Fallback
+
+The `404.html` file provides SPA fallback for direct URL access:
+
+```javascript
+// Redirect direct URLs to app with base path
+import { deploymentConfig } from './js/config.js';
+sessionStorage.redirect = location.href;
+location.replace(deploymentConfig.basePath);
+```
+
+This ensures users can bookmark or directly navigate to any route.
 
 ## Next Steps
 
