@@ -2,10 +2,12 @@
   "name": "web_native_routing",
   "version": "1.0.0",
   "description": "Vanilla JS static web app demonstrating client-side routing without SPA frameworks",
+  "deploy_base_path": "/web_native_routing/",
   "type": "module",
   "scripts": {
     "dev": "serve",
-    "deploy": "gh-pages -d .",
+    "build": "./scripts/build.sh",
+    "deploy": "npm run build && gh-pages -d dist",
     "test:e2e": "npx playwright-bdd && playwright test",
     "test:e2e:headed": "npx playwright-bdd && playwright test --headed",
     "test:e2e:headed:chromium": "npx playwright-bdd && playwright test --headed --project=chromium",
