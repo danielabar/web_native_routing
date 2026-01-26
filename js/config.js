@@ -1,7 +1,7 @@
 // Deployment configuration - single source of truth
 export const deploymentConfig = {
     // Set based on deployment target
-    // basePath: '/',                      // Local development
+    // basePath: '/web_native_routing/',                      // Local development
     basePath: '/web_native_routing/',   // GitHub Pages
 };
 
