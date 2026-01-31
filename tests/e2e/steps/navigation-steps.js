@@ -54,3 +54,19 @@ Then('the contact form should be functional', async function ({ page }) {
   // Wait for success message to appear
   await expect(page.locator('.success')).toBeVisible({ timeout: 3000 });
 });
+
+When('I use browser back', async function ({ page }) {
+  await page.goBack();
+  // Wait for the router to process the popstate event and load content
+  await page.waitForLoadState('networkidle');
+  // Small buffer for router processing
+  await page.waitForTimeout(100);
+});
+
+When('I use browser forward', async function ({ page }) {
+  await page.goForward();
+  // Wait for the router to process the popstate event and load content
+  await page.waitForLoadState('networkidle');
+  // Small buffer for router processing
+  await page.waitForTimeout(100);
+});

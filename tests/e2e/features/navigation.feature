@@ -26,3 +26,17 @@ Feature: Web Native Routing Navigation
       | home    | Welcome to Web Native Routing | /        |
       | about   | About This Project          | /about   |
       | contact | Get In Touch                | /contact |
+
+  Scenario: Browser navigation controls
+    Given I visit the home page
+    When I click the "About" navigation link
+    And I click the "Contact" navigation link
+    When I use browser back
+    Then I should see "About This Project"
+    And the URL should be "/about"
+    When I use browser back
+    Then I should see "Welcome to Web Native Routing"
+    And the URL should be "/"
+    When I use browser forward
+    Then I should see "About This Project"
+    And the URL should be "/about"
