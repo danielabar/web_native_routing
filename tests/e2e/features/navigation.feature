@@ -15,3 +15,14 @@ Feature: Web Native Routing Navigation
     And the URL should be "/contact"
     When I interact with the contact form
     Then the contact form should be functional
+
+  Scenario Outline: Direct page access
+    When I visit the "<page>" page directly
+    Then I should see "<expectedContent>"
+    And the URL should be "<url>"
+
+    Examples:
+      | page    | expectedContent             | url      |
+      | home    | Welcome to Web Native Routing | /        |
+      | about   | About This Project          | /about   |
+      | contact | Get In Touch                | /contact |

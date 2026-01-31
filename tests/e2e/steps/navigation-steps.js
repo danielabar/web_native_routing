@@ -5,6 +5,24 @@ Given('I visit the home page', async function ({ page }) {
   await page.goto('/');
 });
 
+When('I visit the {string} page directly', async function ({ page }, pageName) {
+  // Map page names to URLs
+  const pageUrls = {
+    'home': '/',
+    'about': '/about',
+    'contact': '/contact'
+  };
+
+  const url = pageUrls[pageName];
+  if (!url) {
+    throw new Error(`Unknown page: ${pageName}`);
+  }
+
+  // Direct URL access might trigger 404.html -> index.html redirect, so wait for network to settle
+  await page.goto(url);
+  await page.waitForLoadState('networkidle');
+});
+
 When('I click the {string} navigation link', async function ({ page }, linkText) {
   await page.click(`nav .nav-links a:has-text("${linkText}")`);
 });
