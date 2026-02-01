@@ -8,6 +8,8 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
+  fullyParallel: true,
+  shuffle: true,
   use: {
     baseURL: "http://localhost:3000",
     screenshot: "only-on-failure",
