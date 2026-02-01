@@ -30,7 +30,9 @@ Feature: Web Native Routing Navigation
   Scenario: Browser navigation controls
     Given I visit the home page
     When I click the "About" navigation link
+    And the URL should be "/about"
     And I click the "Contact" navigation link
+    And the URL should be "/contact"
     When I use browser back
     Then I should see "About This Project"
     And the URL should be "/about"
@@ -40,3 +42,4 @@ Feature: Web Native Routing Navigation
     When I use browser forward
     Then I should see "About This Project"
     And the URL should be "/about"
+    # When I check the router debug information
