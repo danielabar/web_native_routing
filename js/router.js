@@ -273,15 +273,11 @@ class Router {
             currentRoute: this.currentRoute,
             locationPathname: location.pathname,
             normalizedPath: this.normalizePath(location.pathname),
-            fullPathExample: this.buildFullPath('/about'),
             routes: Array.from(this.routes.entries()),
             cache: Array.from(this.cache.keys()),
             viewCache: Array.from(this.viewCache.keys())
         };
     }
-
-// ... rest of router methods remain similar
 }
 
-// Make Router available globally
 window.Router = Router;
