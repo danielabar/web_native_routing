@@ -70,3 +70,13 @@ When('I use browser forward', async function ({ page }) {
   // Small buffer for router processing
   await page.waitForTimeout(100);
 });
+
+When("I check the router debug information", async function ({ page }) {
+  const debugInfo = await page.evaluate(() => {
+    return window.app.router.debug();
+  });
+
+  console.log("Router debug info:", debugInfo);
+  // You could also store this in test context for assertions
+  this.debugInfo = debugInfo;
+});
