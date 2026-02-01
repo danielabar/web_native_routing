@@ -80,3 +80,17 @@ When("I check the router debug information", async function ({ page }) {
   // You could also store this in test context for assertions
   this.debugInfo = debugInfo;
 });
+
+When('I visit an invalid path {string}', async function ({ page }, invalidPath) {
+  await page.goto(invalidPath);
+  await page.waitForLoadState('networkidle');
+});
+
+Then('I should see a 404 error page', async function ({ page }) {
+  await expect(page.getByText('404 - Page Not Found')).toBeVisible();
+  await expect(page.getByText("The page you're looking for doesn't exist.")).toBeVisible();
+});
+
+Then('I should see a {string} button', async function ({ page }, buttonText) {
+  await expect(page.getByText(buttonText)).toBeVisible();
+});

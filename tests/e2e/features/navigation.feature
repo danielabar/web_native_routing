@@ -42,4 +42,9 @@ Feature: Web Native Routing Navigation
     When I use browser forward
     Then I should see "About This Project"
     And the URL should be "/about"
-    # When I check the router debug information
+
+  Scenario: Invalid route handling
+    When I visit an invalid path "/nosuchthing"
+    Then I should see a 404 error page
+    And the URL should be "/nosuchthing"
+    And I should see a "Go Home" button
