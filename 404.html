@@ -9,7 +9,7 @@
         import { deploymentConfig } from './js/config.js';
 
         // Store the intended URL
-        sessionStorage.redirect = location.href;
+        sessionStorage.setItem('redirect', location.href);
 
         // Redirect to app base path (no detection needed)
         location.replace(deploymentConfig.basePath);
