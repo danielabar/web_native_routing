@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A vanilla JavaScript SPA demonstrating client-side routing using only native web APIs (History API, Fetch API, ES6 modules). No frameworks or build tools required for development. The project includes a build system specifically for handling deployment base path configuration (critical for GitHub Pages deployment).
+A vanilla JavaScript SPA demonstrating client-side routing using only native web APIs (History API, Fetch API, ES6 modules). No frameworks or build tools required. Base path is auto-detected at runtime via `import.meta.url`, so the same source files work in any deployment context without a build step.
 
 ## Development Commands
 
@@ -12,10 +12,7 @@ A vanilla JavaScript SPA demonstrating client-side routing using only native web
 # Start development server with live reload
 npm run dev
 
-# Build for deployment (creates dist/ with configured base path)
-npm run build
-
-# Deploy to GitHub Pages
+# Deploy to GitHub Pages (deploys source directly, no build step needed)
 npm run deploy
 
 # Run all e2e tests (Playwright + BDD)
@@ -50,14 +47,13 @@ The application uses a custom `Router` class that:
 5. View class is instantiated and its `init()` method is called
 6. On navigation away, view's `destroy()` method is called for cleanup
 
-### Base Path Management (Critical for Deployment)
+### Base Path Auto-Detection
 
-The project uses **explicit base path configuration** to handle different deployment contexts:
-- **Development**: `basePath: '/'` (root path)
-- **GitHub Pages**: `basePath: '/web_native_routing/'` (project subdirectory)
+The base path is auto-detected at runtime using `import.meta.url` in `js/base-path.js`. Since that module always lives at `<deployment-root>/js/base-path.js`, stripping the `js/` suffix yields the correct base path in any environment:
+- **Local dev** (`localhost:3000`): basePath = `/`
+- **GitHub Pages** (`user.github.io/repo/`): basePath = `/repo/`
 
-**Single source of truth**: `js/config.js` exports `deploymentConfig.basePath`
-**Build system**: `scripts/build.sh` modifies `config.js` for deployment using package.json's `deploy_base_path`
+No build step or configuration is needed — the same source files work everywhere.
 
 ## Key Files and Their Roles
 
@@ -70,7 +66,7 @@ The project uses **explicit base path configuration** to handle different deploy
   - `loadViewScript()` - Dynamically imports view modules using ES6 `import()`
 
 - `js/app.js` - Application initialization, creates router instance and registers routes
-- `js/config.js` - **Single source of truth** for base path configuration
+- `js/base-path.js` - Auto-detects deployment base path using `import.meta.url`
 - `js/routes.js` - Centralized route definitions array
 
 ### View Structure
@@ -84,14 +80,10 @@ View classes must:
 - Implement `init()` method (called after template loads)
 - Implement `destroy()` method (called before navigating away)
 
-### Build and Deployment
+### Deployment
 
-- `scripts/build.sh` - Bash script that:
-  1. Copies all files to `dist/` (excluding node_modules, docs, etc.)
-  2. Replaces `basePath: '/'` in `dist/js/config.js` with value from `package.json`
-  3. Enables universal deployment without code changes
-
-- `404.html` - SPA fallback for direct URL access on static hosts
+- `404.html` - SPA fallback for direct URL access on static hosts (imports `base-path.js` for redirect target)
+- `npm run deploy` uses `gh-pages -d .` to deploy source directly — no build step needed
 
 ### Testing
 
