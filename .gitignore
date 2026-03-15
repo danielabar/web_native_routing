@@ -47,3 +47,5 @@ dist/
 test-results/
 playwright-report/
 .features-gen/
+
+.claude/settings.local.json

@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Native Router</title>
     <script type="module">
-        // SPA fallback - redirect to configured base path
-        import { deploymentConfig } from './js/config.js';
+        // SPA fallback - redirect to app base path
+        import { basePath } from './js/base-path.js';
 
         // Store the intended URL
         sessionStorage.setItem('redirect', location.href);
 
-        // Redirect to app base path (no detection needed)
-        location.replace(deploymentConfig.basePath);
+        // Redirect to app base path
+        location.replace(basePath);
     </script>
 </head>
 <body>

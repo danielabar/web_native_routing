@@ -1,12 +1,9 @@
-import { deploymentConfig } from './config.js';
+import { basePath } from './base-path.js';
 import { routes } from './routes.js';
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
-    // Create router with explicit configuration
-    const router = new Router({
-        basePath: deploymentConfig.basePath
-    });
+    const router = new Router({ basePath });
 
     // Register routes from centralized config
     routes.forEach(route => {
@@ -20,5 +17,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Make router globally available for debugging
     window.app = { router };
 
-    console.log('Web Native Router initialized with base path:', deploymentConfig.basePath);
+    console.log('Web Native Router initialized with base path:', basePath);
 });
