@@ -1,0 +1,32 @@
+{
+  "name": "web_native_routing",
+  "version": "1.0.0",
+  "description": "Vanilla JS static web app demonstrating client-side routing without SPA frameworks",
+  "type": "module",
+  "scripts": {
+    "dev": "serve",
+    "deploy": "gh-pages -d .",
+    "test:e2e": "npx playwright-bdd && playwright test",
+    "test:e2e:headed": "npx playwright-bdd && playwright test --headed",
+    "test:e2e:headed:chromium": "npx playwright-bdd && playwright test --headed --project=chromium",
+    "test:e2e:chromium": "npx playwright-bdd && playwright test --project=chromium",
+    "test:e2e:firefox": "npx playwright-bdd && playwright test --project=firefox",
+    "test:e2e:webkit": "npx playwright-bdd && playwright test --project=webkit"
+  },
+  "keywords": [
+    "vanilla-js",
+    "client-side-routing",
+    "static-web-app",
+    "github-pages"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.5.0",
+    "gh-pages": "^6.3.0",
+    "live-server": "^1.2.2",
+    "playwright": "^1.57.0",
+    "playwright-bdd": "^8.4.2",
+    "serve": "^14.2.5"
+  }
+}
